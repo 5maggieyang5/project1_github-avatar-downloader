@@ -4,7 +4,8 @@ const fs           = require('fs');
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
-/*function getRepoContributors(repoOwner, repoName, cb) {
+//the function makes a request for JSON, getting back an array of contributors.
+function getRepoContributors(repoOwner, repoName, cb) {
   let options = {
     url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
     headers:{
@@ -19,16 +20,7 @@ console.log('Welcome to the GitHub Avatar Downloader!');
   });
 }
 
-getRepoContributors('jquery', 'jquery', function(err, result){
-  if(err){
-    console.error(err);
-  } else {
-    for (let item of result){
-      console.log(item['avatar_url']);
-    }
-  }
-})*/
-
+//the function fetches the desired avatar_url and saves this information to the given filePath
 function downloadImageByURL(url, filePath) {
   request.get(url)
 
@@ -49,3 +41,19 @@ function downloadImageByURL(url, filePath) {
     console.log('Download complete.');
   });
 }
+
+//loops through each item in the array, download the avartar
+getRepoContributors('jquery', 'jquery', function(err, result){
+  if(err){
+    console.error(err);
+  } else {
+    for (let item of result){
+      //constructs a file path using the login value
+      let filePath = `avatars/${item['login']}`;
+      //get the avartar url
+      let url = item['avatar_url'];
+      downloadImageByURL(url, filePath);
+    }
+  }
+})
+
