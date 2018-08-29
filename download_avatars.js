@@ -35,13 +35,10 @@ function downloadImageByURL(url, filePath) {
   })
 
   .on('response', function (response) {
-    console.log('Response Status Code: ', response.statusCode);
-    console.log('Response Status Msg: ', response.statusMessage);
-    console.log('Response Content Type: ', response.headers['content-type']);
     console.log('Downloading image...');
+    // `.pipe and fs.createWriteStream to save the file to working directory ('./future.jpg')
+    response.pipe(fs.createWriteStream(filePath + response.headers['content-type'].split('/')[1]))
   })
-  // `.pipe and fs.createWriteStream to save the file to working directory ('./future.jpg')
-  .pipe(fs.createWriteStream(filePath))
 
   .on('finish', function(){
     console.log('Download complete.');
@@ -55,7 +52,7 @@ getRepoContributors(repoOwner, repoName, function(err, result){
   } else {
     for (let item of result){
       //constructs a file path using the login value
-      let filePath = `avatars/${item['login']}`;
+      let filePath = `avatars/${item['login']}.`;
       //get the avartar url
       let url = item['avatar_url'];
       downloadImageByURL(url, filePath);
